@@ -87,7 +87,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        url: "{{ route('profile.update') }}",
+                        url: "{{ route('profile.update_admin') }}",
                         type: "POST",
                         data: new FormData($('#profile_form')[0]),
                         processData: false,
@@ -105,7 +105,7 @@
                                     allowOutsideClick: false,
                                     allowEscapeKey: false
                                 }).then((result) => {
-                                    window.open("{{ route('profile') }}", '_self');
+                                    location.reload();
                                 })
                             } else {
                                 Swal.fire({

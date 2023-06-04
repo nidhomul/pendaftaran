@@ -48,7 +48,11 @@ Route::controller(FormController::class)->group(function () {
 
 Route::controller(ProfileController::class)->group(function () {
     Route::get('profile', 'index')->name('profile');
-    Route::put('profile/update', 'update')->name('profile.update');
+    Route::put('profile/update_user', 'updateUser')->name('profile.update_user');
+
+    Route::group(['middleware' => ['role:admin']], function () {
+        Route::put('profile/update_admin', 'updateAdmin')->name('profile.update_admin');
+    });
 });
 
 Route::group(['middleware' => ['role:admin']], function () {
