@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MasterScoutLevelController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         try {
@@ -19,6 +24,38 @@ class MasterScoutLevelController extends Controller
             ]);
         } catch (\Throwable $th) {
             abort(500);
+        }
+    }
+
+    public function create()
+    {
+        return view('pages.admin.scout_level.create', [
+            'sb_open' => '',
+            'sb_active' => 'master_scout_level'
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $mstrScoutLevel = MstrScoutLevel::orderBy('id','DESC')->first();
+            $id = $mstrScoutLevel->id + 1;
+
+            MstrScoutLevel::create([
+                'id' => $id,
+                'scout_level' => $request->scout_level,
+                'created_by' => auth()->user()->email
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil disimpan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
         }
     }
 
@@ -49,38 +86,6 @@ class MasterScoutLevelController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diubah'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ]);
-        }
-    }
-
-    public function create()
-    {
-        return view('pages.admin.scout_level.create', [
-            'sb_open' => '',
-            'sb_active' => 'master_scout_level'
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            $mstrScoutLevel = MstrScoutLevel::orderBy('id','DESC')->first();
-            $id = $mstrScoutLevel->id + 1;
-
-            MstrScoutLevel::create([
-                'id' => $id,
-                'scout_level' => $request->scout_level,
-                'created_by' => auth()->user()->email
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil disimpan'
             ]);
         } catch (\Throwable $th) {
             return response()->json([

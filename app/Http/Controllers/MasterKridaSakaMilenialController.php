@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MasterKridaSakaMilenialController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         try {
@@ -19,6 +24,38 @@ class MasterKridaSakaMilenialController extends Controller
             ]);
         } catch (\Throwable $th) {
             abort(500);
+        }
+    }
+
+    public function create()
+    {
+        return view('pages.admin.krida_saka_milenial.create', [
+            'sb_open' => '',
+            'sb_active' => 'master_krida_saka_milenial'
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $mstrKridaSakaMilenial = MstrKridaSakaMilenial::orderBy('id','DESC')->first();
+            $id = $mstrKridaSakaMilenial->id + 1;
+
+            MstrKridaSakaMilenial::create([
+                'id' => $id,
+                'krida_saka_milenial' => $request->krida_saka_milenial,
+                'created_by' => auth()->user()->email
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil disimpan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
         }
     }
 
@@ -49,38 +86,6 @@ class MasterKridaSakaMilenialController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diubah'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ]);
-        }
-    }
-
-    public function create()
-    {
-        return view('pages.admin.krida_saka_milenial.create', [
-            'sb_open' => '',
-            'sb_active' => 'master_krida_saka_milenial'
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            $mstrKridaSakaMilenial = MstrKridaSakaMilenial::orderBy('id','DESC')->first();
-            $id = $mstrKridaSakaMilenial->id + 1;
-
-            MstrKridaSakaMilenial::create([
-                'id' => $id,
-                'krida_saka_milenial' => $request->krida_saka_milenial,
-                'created_by' => auth()->user()->email
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil disimpan'
             ]);
         } catch (\Throwable $th) {
             return response()->json([

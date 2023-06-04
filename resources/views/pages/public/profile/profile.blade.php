@@ -39,7 +39,7 @@
                         <div class="form-group mb-3">
                             <label class="mb-2">Password</label>
                             <input class="form-control mb-2" id="password" name="password" type="password" />
-                            <span class="text-danger">* Kosongkan password apabila anda tidak ingin mengubah password</span>
+                            <span class="text-danger" style="font-size: 13px">* Kosongkan password apabila anda tidak ingin mengubah password</span>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MasterKwarranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         try {
@@ -19,6 +24,38 @@ class MasterKwarranController extends Controller
             ]);
         } catch (\Throwable $th) {
             abort(500);
+        }
+    }
+
+    public function create()
+    {
+        return view('pages.admin.kwarran.create', [
+            'sb_open' => '',
+            'sb_active' => 'master_kwarran'
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $mstrKwarran = MstrKwarran::orderBy('id','DESC')->first();
+            $id = $mstrKwarran->id + 1;
+
+            MstrKwarran::create([
+                'id' => $id,
+                'kwarran' => $request->kwarran,
+                'created_by' => auth()->user()->email
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil disimpan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
         }
     }
 
@@ -49,38 +86,6 @@ class MasterKwarranController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diubah'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ]);
-        }
-    }
-
-    public function create()
-    {
-        return view('pages.admin.kwarran.create', [
-            'sb_open' => '',
-            'sb_active' => 'master_kwarran'
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            $mstrKwarran = MstrKwarran::orderBy('id','DESC')->first();
-            $id = $mstrKwarran->id + 1;
-
-            MstrKwarran::create([
-                'id' => $id,
-                'kwarran' => $request->kwarran,
-                'created_by' => auth()->user()->email
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil disimpan'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
